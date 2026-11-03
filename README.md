@@ -1,0 +1,2 @@
+# QGIS-GeoParquet-Raster-Catalog
+図郭別に整備された大量のオルソ画像をCOGに変換し、GeoParquet索引と仮想解像度レベルを利用して、GDAL GTI経由で動的に描画するQGISプラグインです。入力はVRT・画像ファイル・フォルダから選択でき、CRSが未設定の画像にはEPSGコードを指定できます。
