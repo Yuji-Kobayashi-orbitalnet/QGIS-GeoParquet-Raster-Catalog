@@ -21,7 +21,7 @@ class BuildTask(QgsTask):
     stageChanged = pyqtSignal(str)
 
     def __init__(self, inputs, output, missing_crs, done):
-        super().__init__('GeoParquet_Raster_Catalog: 画像索引を作成', QgsTask.CanCancel)
+        super().__init__('GeoParquet_Raster_Catalog: 画像索引を作成', QgsTask.Flag.CanCancel)
         self.inputs, self.output = inputs, output
         self.missing_crs, self.done = missing_crs, done
         self.result, self.error = None, None
@@ -68,7 +68,7 @@ class Plugin:
     def _file_widget(self, mode, title, filter_text=''):
         widget = QgsFileWidget()
         widget.setStorageMode(mode)
-        widget.setRelativeStorage(QgsFileWidget.Absolute)
+        widget.setRelativeStorage(QgsFileWidget.RelativeStorage.Absolute)
         widget.setDialogTitle(title)
         widget.setDefaultRoot(QgsProject.instance().homePath() or QDir.homePath())
         if filter_text:
@@ -96,9 +96,9 @@ class Plugin:
             self.mode_buttons.append(button)
             inputs.addWidget(button)
         self.pages = QStackedWidget()
-        self.vrt = self._file_widget(QgsFileWidget.GetFile, '入力VRTを選択', 'VRT (*.vrt)')
-        self.images = self._file_widget(QgsFileWidget.GetMultipleFiles, '入力画像を選択（複数可）', IMAGE_FILTER)
-        self.folder = self._file_widget(QgsFileWidget.GetDirectory, '画像フォルダを選択')
+        self.vrt = self._file_widget(QgsFileWidget.StorageMode.GetFile, '入力VRTを選択', 'VRT (*.vrt)')
+        self.images = self._file_widget(QgsFileWidget.StorageMode.GetMultipleFiles, '入力画像を選択（複数可）', IMAGE_FILTER)
+        self.folder = self._file_widget(QgsFileWidget.StorageMode.GetDirectory, '画像フォルダを選択')
         self.recursive = QCheckBox('下位フォルダも検索する')
         for field, help_text in ((self.vrt, 'VRTを1ファイル指定します。'),
                                  (self.images, 'Ctrl / Shiftキーで画像を複数選択できます。'),
@@ -141,7 +141,7 @@ class Plugin:
 
         self.output_group = QGroupBox('3. 保存先ファイル')
         output_layout = QVBoxLayout(self.output_group)
-        self.output = self._file_widget(QgsFileWidget.SaveFile,
+        self.output = self._file_widget(QgsFileWidget.StorageMode.SaveFile,
                                         'GeoParquet索引の保存先を指定', 'GeoParquet (*.parquet)')
         self.output.lineEdit().setPlaceholderText('保存する .parquet ファイルを指定してください')
         output_layout.addWidget(self.output)
@@ -172,7 +172,7 @@ class Plugin:
         scroll.setWidgetResizable(True)
         scroll.setWidget(widget)
         self.dock.setWidget(scroll)
-        self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dock)
+        self.iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock)
         for mode, button in enumerate(self.mode_buttons):
             button.toggled.connect(lambda checked, index=mode: self.change_mode(index) if checked else None)
         self.recursive.toggled.connect(self.refresh_preview)
@@ -296,7 +296,7 @@ class Plugin:
                     enhancement = QgsContrastEnhancement(provider.dataType(band))
                     enhancement.setMinimumValue(0)
                     enhancement.setMaximumValue(255)
-                    enhancement.setContrastEnhancementAlgorithm(QgsContrastEnhancement.NoEnhancement)
+                    enhancement.setContrastEnhancementAlgorithm(QgsContrastEnhancement.ContrastEnhancementAlgorithm.NoEnhancement)
                     setter(enhancement)
         project = QgsProject.instance()
         project.addMapLayer(layer)
