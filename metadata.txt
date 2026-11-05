@@ -1,0 +1,24 @@
+[general]
+name=GeoParquet_Raster_Catalog
+description=Convert orthophotos to COGs and render dynamically via GDAL GTI. — 大量のオルソ画像をCOGに変換し、GDAL GTI経由で動的に描画します
+version=0.2.1
+qgisMinimumVersion=3.40
+author=Yuji Kobayashi
+email=y-kobayashi@orbitalnet.jp
+category=Raster
+experimental=True
+about=A QGIS plugin that converts large amounts of tiled orthophotos into COGs (Cloud Optimized GeoTIFFs) and dynamically renders them via GDAL GTI using GeoParquet indexes and virtual resolution levels.
+	You can choose inputs from VRTs, image files, or folders, and specify an EPSG code for images without a predefined CRS.
+	
+	【日本語説明】
+	図郭別に整備された大量のオルソ画像をCOGに変換し、GeoParquet索引と仮想解像度レベルを利用して、GDAL GTI経由で動的に描画するQGISプラグインです。
+	入力はVRT・画像ファイル・フォルダから選択でき、CRSが未設定の画像にはEPSGコードを指定できます。
+	
+	Requires GDAL 3.10 or later with GTI, Parquet and COG drivers in the QGIS Python environment. Tested on Windows with QGIS 3.40.10 / GDAL 3.11.3. Documentation is English/Japanese; the current interface is Japanese.
+	QGISのPython環境にGDAL 3.10以降とGTI・Parquet・COGドライバが必要です。WindowsのQGIS 3.40.10／GDAL 3.11.3で検証しています。ドキュメントは英日併記、現在の操作画面は日本語です。
+repository=https://github.com/Yuji-Kobayashi-orbitalnet/QGIS-GeoParquet-Raster-Catalog
+tracker=https://github.com/Yuji-Kobayashi-orbitalnet/QGIS-GeoParquet-Raster-Catalog/issues
+license=GPL-2.0-or-later
+qgisMaximumVersion=3.99
+homepage=https://github.com/Yuji-Kobayashi-orbitalnet/QGIS-GeoParquet-Raster-Catalog#readme
+
