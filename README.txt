@@ -1,4 +1,4 @@
-GeoParquet_Raster_Catalog 0.2.1 — QGIS Plugin
+GeoParquet_Raster_Catalog 0.2.2 — QGIS Plugin
 
 A QGIS plugin that converts large amounts of tiled orthophotos into COGs (Cloud Optimized GeoTIFFs) and dynamically renders them via GDAL GTI using GeoParquet indexes and virtual resolution levels. Inputs can be selected from VRTs, image files, or folders. You can also specify an EPSG code for images without a predefined CRS.
 
@@ -35,7 +35,7 @@ License: GPL-2.0-or-later. See LICENSE.
 ----------------------------------------------------------------------
 【日本語版 / Japanese】
 
-GeoParquet_Raster_Catalog 0.2.1 — QGISプラグイン
+GeoParquet_Raster_Catalog 0.2.2 — QGISプラグイン
 図郭別に整備された大量のオルソ画像をCOGに変換し、GeoParquet索引と仮想解像度レベルを利用して、GDAL GTI経由で動的に描画するQGISプラグインです。入力はVRT・画像ファイル・フォルダから選択でき、CRSが未設定の画像にはEPSGコードを指定できます。
 
 作者: Yuji Kobayashi

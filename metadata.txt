@@ -1,7 +1,7 @@
 [general]
 name=GeoParquet_Raster_Catalog
 description=Convert orthophotos to COGs and render dynamically via GDAL GTI. — 大量のオルソ画像をCOGに変換し、GDAL GTI経由で動的に描画します
-version=0.2.1
+version=0.2.2
 qgisMinimumVersion=3.40
 author=Yuji Kobayashi
 email=y-kobayashi@orbitalnet.jp

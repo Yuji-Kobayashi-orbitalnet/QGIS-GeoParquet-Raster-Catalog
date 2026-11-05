@@ -6,7 +6,7 @@ import shutil
 import hashlib
 import json
 from pathlib import Path
-import xml.etree.ElementTree as ET
+from html import escape
 from osgeo import gdal, ogr, osr
 
 
@@ -182,17 +182,19 @@ def _build(inputs, output, progress, cancelled, missing_crs, optimize, stage_mes
             progress(95 * (i + 1) / len(sources))
         layer = None
         ds = None
-        root = ET.Element('GDALTileIndexDataset')
+        # Write only: no XML parser is needed. Escape all dynamic XML content.
+        xml = ['<?xml version="1.0" encoding="utf-8"?>', '<GDALTileIndexDataset>']
         for key, value in [('IndexDataset', str(output)), ('ResX', resx),
                            ('ResY', resy), ('SRS', reference.ExportToWkt()),
                            ('MinX', bounds[0]), ('MinY', bounds[1]),
                            ('MaxX', bounds[2]), ('MaxY', bounds[3])]:
-            ET.SubElement(root, key).text = str(value)
+            xml.append(f'<{key}>{escape(str(value))}</{key}>')
         for b, (dtype, color, nodata) in enumerate(signature, 1):
-            band = ET.SubElement(root, 'Band', band=str(b), dataType=gdal.GetDataTypeName(dtype))
-            ET.SubElement(band, 'ColorInterp').text = gdal.GetColorInterpretationName(color)
+            xml.append(f'<Band band="{b}" dataType="{escape(gdal.GetDataTypeName(dtype))}">')
+            xml.append(f'<ColorInterp>{escape(gdal.GetColorInterpretationName(color))}</ColorInterp>')
             if nodata is not None:
-                ET.SubElement(band, 'NoDataValue').text = str(nodata)
+                xml.append(f'<NoDataValue>{escape(str(nodata))}</NoDataValue>')
+            xml.append('</Band>')
         if optimize:
             stage_message(f'索引作成済み（COG作成{converted}件・再利用{reused}件）')
         # Publish display-resolution reads even when preprocessing is disabled.
@@ -202,9 +204,10 @@ def _build(inputs, output, progress, cancelled, missing_crs, optimize, stage_mes
                       (bounds[3] - bounds[1]) / resy)
         factor = 2
         while longest / (factor / 2) > 256:
-            ET.SubElement(ET.SubElement(root, 'Overview'), 'Factor').text = str(factor)
+            xml.append(f'<Overview><Factor>{factor}</Factor></Overview>')
             factor *= 2
-        ET.ElementTree(root).write(stage / companion.name, encoding='utf-8', xml_declaration=True)
+        xml.append('</GDALTileIndexDataset>')
+        (stage / companion.name).write_text('\n'.join(xml), encoding='utf-8')
         if cancelled():
             raise Cancelled()
         # Exclusive publication avoids overwriting files created by another task.
